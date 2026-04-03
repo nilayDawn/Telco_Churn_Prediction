@@ -1,6 +1,6 @@
 import sys
 import types
-
+from src.logger import logging
 
 def error_message_detail(error,error_detail:types.ModuleType):
     _,_,exc_tb=error_detail.exc_info()
