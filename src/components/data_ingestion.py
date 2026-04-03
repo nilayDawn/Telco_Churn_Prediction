@@ -1,5 +1,11 @@
 import os
 import sys
+
+if __package__ is None or __package__ == "":
+    project_root = os.path.abspath(os.path.join(os.path.dirname(__file__), "..", ".."))
+    if project_root not in sys.path:
+        sys.path.insert(0, project_root)
+
 from src.exception import CustomException
 from src.logger import logging
 import pandas as pd
@@ -7,6 +13,9 @@ from sklearn.model_selection import train_test_split
 from dataclasses import dataclass
 from src.components.data_transformation import DataTransformation
 from src.components.data_transformation import DataTransformationConfig
+
+from src.components.model_trainer import ModelTrainr
+from src.components.model_trainer import ModelTrainingConfig
 
 @dataclass
 class DataIngestionConfig:
@@ -47,3 +56,6 @@ if __name__ == "__main__":
             
     data_transformation=DataTransformation()
     train_arr,test_arr,_=data_transformation.initiate_data_transformation(train_data,test_data)
+
+    modeltrainer=ModelTrainr()
+    print(modeltrainer.initiate_model_trainer(train_arr, test_arr))

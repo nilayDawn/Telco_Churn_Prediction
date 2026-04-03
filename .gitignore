@@ -67,4 +67,4 @@ htmlcov/
 Thumbs.db
 
 #artifacts
-.artifacts
+.artifacts/
