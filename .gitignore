@@ -35,3 +35,9 @@ logs/*
 
 # OS generated files
 Thumbs.db
+
+# MLflow Database & Artifacts
+mlflow.db
+mlruns/
+artifacts/*
+!artifacts/.gitkeep
