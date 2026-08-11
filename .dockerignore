@@ -1,0 +1,33 @@
+# Virtual Environments
+.venv/
+venv/
+env/
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+
+# Git & GitHub
+.git/
+.gitignore
+.github/
+
+# Local Logs and Run Metadata
+logs/
+*.log
+mlruns/
+mlflow.db
+
+# Heavy Raw Data (Load this via volumes, not container builds)
+data/
+artifacts/*.csv
+
+# IDE and OS settings
+.vscode/
+.idea/
+.DS_Store
+
+# Testing & Coverage cache
+.pytest_cache/
+.coverage
+htmlcov/
