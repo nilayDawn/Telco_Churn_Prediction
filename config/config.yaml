@@ -1,0 +1,32 @@
+data:
+  raw_path: "data/raw/Telco-Customer-Churn.csv"
+  processed_train_path: "data/processed/train.csv"
+  processed_test_path: "data/processed/test.csv"
+  target_column: "Churn"
+  test_size: 0.2
+  random_state: 42
+
+artifacts:
+  model_dir: "artifacts"
+  model_name: "model.pkl"
+  preprocessor_name: "preprocessor.pkl"
+
+mlflow:
+  experiment_name: "Customer_Churn_Prediction"
+  tracking_uri: "mlruns"
+
+model:
+  type: "lightgbm"
+  params:
+    n_estimators: 100
+    learning_rate: 0.014865664716940355
+    max_depth: 3
+    num_leaves: 42
+    min_child_samples: 47
+    subsample: 0.9815448676605261
+    colsample_bytree: 0.9226700449971044
+    class_weight: "balanced"
+    random_state: 42
+    n_jobs: -1
+    objective: "binary"
+    metric: "binary_logloss"
