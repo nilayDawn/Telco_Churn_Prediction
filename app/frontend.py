@@ -3,50 +3,554 @@ import os
 import requests
 import streamlit as st
 
-# Backend API configuration
+# ============================================================
+# CONFIGURATION
+# ============================================================
+
 API_URL = os.getenv("API_URL", "http://localhost:8000")
 
 st.set_page_config(
-    page_title="Customer Churn Predictor",
+    page_title="ChurnAI | Customer Churn Predictor",
     page_icon="🔮",
     layout="wide",
+    initial_sidebar_state="collapsed",
 )
 
-st.title("🔮 Customer Churn Prediction Dashboard")
+
+# ============================================================
+# CUSTOM CSS
+# ============================================================
+
 st.markdown(
-    "Enter customer demographics, account details, and subscription services to predict churn probability."
+    """
+    <style>
+
+    /* --------------------------------------------------------
+       GLOBAL
+    -------------------------------------------------------- */
+
+    .stApp {
+        background:
+            radial-gradient(
+                circle at 10% 10%,
+                rgba(99, 102, 241, 0.12),
+                transparent 30%
+            ),
+            radial-gradient(
+                circle at 90% 20%,
+                rgba(139, 92, 246, 0.10),
+                transparent 30%
+            ),
+            #0b0f19;
+        color: #f8fafc;
+    }
+
+    .block-container {
+        max-width: 1400px;
+        padding-top: 2rem;
+        padding-bottom: 4rem;
+    }
+
+    /* Hide Streamlit default elements */
+
+    #MainMenu {
+        visibility: hidden;
+    }
+
+    footer {
+        visibility: hidden;
+    }
+
+    header {
+        background: transparent !important;
+    }
+
+    /* --------------------------------------------------------
+       HERO
+    -------------------------------------------------------- */
+
+    .hero {
+        padding: 35px 40px;
+        border-radius: 24px;
+        margin-bottom: 30px;
+
+        background:
+            linear-gradient(
+                135deg,
+                rgba(79, 70, 229, 0.25),
+                rgba(124, 58, 237, 0.18),
+                rgba(15, 23, 42, 0.8)
+            );
+
+        border: 1px solid rgba(148, 163, 184, 0.15);
+
+        box-shadow:
+            0 20px 60px rgba(0, 0, 0, 0.25);
+    }
+
+    .hero-title {
+        font-size: 42px;
+        font-weight: 800;
+        margin: 0;
+
+        background: linear-gradient(
+            90deg,
+            #ffffff,
+            #a5b4fc,
+            #c4b5fd
+        );
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .hero-subtitle {
+        font-size: 17px;
+        color: #94a3b8;
+        margin-top: 10px;
+        max-width: 750px;
+    }
+
+    .status-badge {
+        display: inline-block;
+        margin-top: 18px;
+        padding: 7px 14px;
+        border-radius: 999px;
+
+        background: rgba(34, 197, 94, 0.12);
+        border: 1px solid rgba(34, 197, 94, 0.25);
+
+        color: #86efac;
+        font-size: 13px;
+        font-weight: 600;
+    }
+
+    /* --------------------------------------------------------
+       SECTION CARDS
+    -------------------------------------------------------- */
+
+    .section-card {
+        padding: 22px 24px;
+        border-radius: 18px;
+        margin-bottom: 12px;
+
+        background: rgba(15, 23, 42, 0.72);
+
+        border: 1px solid rgba(148, 163, 184, 0.12);
+
+        box-shadow:
+            0 10px 35px rgba(0, 0, 0, 0.18);
+    }
+
+    .section-title {
+        font-size: 20px;
+        font-weight: 700;
+        color: #f8fafc;
+        margin-bottom: 3px;
+    }
+
+    .section-description {
+        font-size: 13px;
+        color: #64748b;
+        margin-bottom: 15px;
+    }
+
+    /* --------------------------------------------------------
+       INPUTS
+    -------------------------------------------------------- */
+
+    label {
+        color: #cbd5e1 !important;
+        font-weight: 500 !important;
+    }
+
+    div[data-baseweb="select"] > div {
+        background-color: #111827 !important;
+        border-color: #334155 !important;
+        border-radius: 10px !important;
+    }
+
+    div[data-baseweb="input"] {
+        background-color: #111827 !important;
+        border-radius: 10px !important;
+    }
+
+    input {
+        color: #f8fafc !important;
+    }
+
+    /* --------------------------------------------------------
+       BUTTON
+    -------------------------------------------------------- */
+
+    .stButton > button,
+    .stFormSubmitButton > button {
+        border: none !important;
+        border-radius: 12px !important;
+
+        background:
+            linear-gradient(
+                135deg,
+                #6366f1,
+                #8b5cf6
+            ) !important;
+
+        color: white !important;
+
+        font-size: 16px !important;
+        font-weight: 700 !important;
+
+        padding: 14px 25px !important;
+
+        box-shadow:
+            0 8px 25px rgba(99, 102, 241, 0.30);
+
+        transition: all 0.2s ease;
+    }
+
+    .stButton > button:hover,
+    .stFormSubmitButton > button:hover {
+        transform: translateY(-2px);
+
+        box-shadow:
+            0 12px 30px rgba(99, 102, 241, 0.45);
+    }
+
+    /* --------------------------------------------------------
+       RESULT CARD
+    -------------------------------------------------------- */
+
+    .result-card {
+        padding: 30px;
+        border-radius: 22px;
+        margin-top: 20px;
+
+        background:
+            linear-gradient(
+                145deg,
+                rgba(15, 23, 42, 0.95),
+                rgba(30, 41, 59, 0.75)
+            );
+
+        border: 1px solid rgba(148, 163, 184, 0.16);
+
+        box-shadow:
+            0 20px 60px rgba(0, 0, 0, 0.30);
+    }
+
+    .result-label {
+        color: #94a3b8;
+        font-size: 13px;
+        text-transform: uppercase;
+        letter-spacing: 1px;
+    }
+
+    .probability {
+        font-size: 58px;
+        font-weight: 800;
+        margin-top: 5px;
+
+        background: linear-gradient(
+            90deg,
+            #818cf8,
+            #c4b5fd
+        );
+
+        -webkit-background-clip: text;
+        -webkit-text-fill-color: transparent;
+    }
+
+    .risk-badge {
+        display: inline-block;
+        padding: 8px 18px;
+        border-radius: 999px;
+
+        font-weight: 700;
+        font-size: 14px;
+
+        margin-top: 8px;
+    }
+
+    .risk-high {
+        background: rgba(239, 68, 68, 0.12);
+        color: #fca5a5;
+        border: 1px solid rgba(239, 68, 68, 0.25);
+    }
+
+    .risk-medium {
+        background: rgba(245, 158, 11, 0.12);
+        color: #fcd34d;
+        border: 1px solid rgba(245, 158, 11, 0.25);
+    }
+
+    .risk-low {
+        background: rgba(34, 197, 94, 0.12);
+        color: #86efac;
+        border: 1px solid rgba(34, 197, 94, 0.25);
+    }
+
+    /* --------------------------------------------------------
+       METRIC CARDS
+    -------------------------------------------------------- */
+
+    .metric-card {
+        padding: 18px;
+        border-radius: 16px;
+
+        background: rgba(15, 23, 42, 0.75);
+
+        border: 1px solid rgba(148, 163, 184, 0.12);
+
+        text-align: center;
+    }
+
+    .metric-value {
+        font-size: 24px;
+        font-weight: 700;
+        color: #f8fafc;
+    }
+
+    .metric-label {
+        font-size: 12px;
+        color: #64748b;
+        margin-top: 4px;
+    }
+
+    /* --------------------------------------------------------
+       FOOTER
+    -------------------------------------------------------- */
+
+    .footer {
+        text-align: center;
+        margin-top: 45px;
+        color: #475569;
+        font-size: 12px;
+    }
+
+    /* Remove excessive form padding */
+
+    [data-testid="stForm"] {
+        border: none !important;
+        padding: 0 !important;
+    }
+
+    </style>
+    """,
+    unsafe_allow_html=True,
 )
 
-st.divider()
 
-# Input Form
+# ============================================================
+# HERO
+# ============================================================
+
+st.markdown(
+    """
+    <div class="hero">
+
+        <div class="hero-title">
+            🔮 ChurnAI
+        </div>
+
+        <div class="hero-subtitle">
+            AI-powered customer churn prediction platform.
+            Analyze customer behavior, subscription services and
+            billing information to identify customers at risk of leaving.
+        </div>
+
+        <div class="status-badge">
+            ● AI Prediction Engine Online
+        </div>
+
+    </div>
+    """,
+    unsafe_allow_html=True,
+)
+
+
+# ============================================================
+# CUSTOMER INPUT FORM
+# ============================================================
+
 with st.form("churn_form"):
+
+    # --------------------------------------------------------
+    # SECTION 1 — DEMOGRAPHICS
+    # --------------------------------------------------------
+
+    st.markdown(
+        """
+        <div class="section-card">
+
+            <div class="section-title">
+                👤 Customer Profile
+            </div>
+
+            <div class="section-description">
+                Basic demographic and customer relationship information
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    col1, col2, col3, col4, col5 = st.columns(5)
+
+    with col1:
+        gender = st.selectbox(
+            "Gender",
+            ["Female", "Male"],
+        )
+
+    with col2:
+        senior = st.selectbox(
+            "Senior Citizen",
+            [0, 1],
+            format_func=lambda x: "Yes" if x == 1 else "No",
+        )
+
+    with col3:
+        partner = st.selectbox(
+            "Partner",
+            ["Yes", "No"],
+        )
+
+    with col4:
+        dependents = st.selectbox(
+            "Dependents",
+            ["Yes", "No"],
+        )
+
+    with col5:
+        tenure = st.number_input(
+            "Tenure (Months)",
+            min_value=0,
+            max_value=120,
+            value=12,
+        )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --------------------------------------------------------
+    # SECTION 2 — SERVICES
+    # --------------------------------------------------------
+
+    st.markdown(
+        """
+        <div class="section-card">
+
+            <div class="section-title">
+                📡 Services & Subscriptions
+            </div>
+
+            <div class="section-description">
+                Customer's active telecommunications and streaming services
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
     col1, col2, col3 = st.columns(3)
 
     with col1:
-        st.subheader("👤 Demographics")
-        gender = st.selectbox("Gender", ["Female", "Male"])
-        senior = st.selectbox("Senior Citizen", [0, 1], format_func=lambda x: "Yes" if x == 1 else "No")
-        partner = st.selectbox("Partner", ["Yes", "No"])
-        dependents = st.selectbox("Dependents", ["Yes", "No"])
-        tenure = st.number_input("Tenure (Months)", min_value=0, max_value=120, value=12)
+
+        phone = st.selectbox(
+            "Phone Service",
+            ["Yes", "No"],
+        )
+
+        multiple = st.selectbox(
+            "Multiple Lines",
+            ["No", "Yes", "No phone service"],
+        )
+
+        internet = st.selectbox(
+            "Internet Service",
+            ["Fiber optic", "DSL", "No"],
+        )
 
     with col2:
-        st.subheader("📞 Services Subscribed")
-        phone = st.selectbox("Phone Service", ["Yes", "No"])
-        multiple = st.selectbox("Multiple Lines", ["No", "Yes", "No phone service"])
-        internet = st.selectbox("Internet Service", ["Fiber optic", "DSL", "No"])
-        security = st.selectbox("Online Security", ["No", "Yes", "No internet service"])
-        backup = st.selectbox("Online Backup", ["Yes", "No", "No internet service"])
-        device = st.selectbox("Device Protection", ["No", "Yes", "No internet service"])
-        tech = st.selectbox("Tech Support", ["No", "Yes", "No internet service"])
-        tv = st.selectbox("Streaming TV", ["Yes", "No", "No internet service"])
-        movies = st.selectbox("Streaming Movies", ["No", "Yes", "No internet service"])
+
+        security = st.selectbox(
+            "Online Security",
+            ["No", "Yes", "No internet service"],
+        )
+
+        backup = st.selectbox(
+            "Online Backup",
+            ["Yes", "No", "No internet service"],
+        )
+
+        device = st.selectbox(
+            "Device Protection",
+            ["No", "Yes", "No internet service"],
+        )
 
     with col3:
-        st.subheader("💳 Account & Billing")
-        contract = st.selectbox("Contract Type", ["Month-to-month", "One year", "Two year"])
-        paperless = st.selectbox("Paperless Billing", ["Yes", "No"])
+
+        tech = st.selectbox(
+            "Tech Support",
+            ["No", "Yes", "No internet service"],
+        )
+
+        tv = st.selectbox(
+            "Streaming TV",
+            ["Yes", "No", "No internet service"],
+        )
+
+        movies = st.selectbox(
+            "Streaming Movies",
+            ["No", "Yes", "No internet service"],
+        )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --------------------------------------------------------
+    # SECTION 3 — BILLING
+    # --------------------------------------------------------
+
+    st.markdown(
+        """
+        <div class="section-card">
+
+            <div class="section-title">
+                💳 Account & Billing
+            </div>
+
+            <div class="section-description">
+                Contract, payment and customer spending information
+            </div>
+
+        </div>
+        """,
+        unsafe_allow_html=True,
+    )
+
+    col1, col2, col3, col4, col5 = st.columns(5)
+
+    with col1:
+
+        contract = st.selectbox(
+            "Contract Type",
+            [
+                "Month-to-month",
+                "One year",
+                "Two year",
+            ],
+        )
+
+    with col2:
+
+        paperless = st.selectbox(
+            "Paperless Billing",
+            ["Yes", "No"],
+        )
+
+    with col3:
+
         payment = st.selectbox(
             "Payment Method",
             [
@@ -56,13 +560,43 @@ with st.form("churn_form"):
                 "Credit card (automatic)",
             ],
         )
-        monthly = st.number_input("Monthly Charges ($)", min_value=0.0, value=70.35, step=0.5)
-        total = st.number_input("Total Charges ($)", min_value=0.0, value=844.20, step=1.0)
 
-    submit_button = st.form_submit_button(label="🚀 Predict Churn Probability", use_container_width=True)
+    with col4:
 
-# Prediction Request Logic
+        monthly = st.number_input(
+            "Monthly Charges ($)",
+            min_value=0.0,
+            value=70.35,
+            step=0.5,
+        )
+
+    with col5:
+
+        total = st.number_input(
+            "Total Charges ($)",
+            min_value=0.0,
+            value=844.20,
+            step=1.0,
+        )
+
+    st.markdown("<br>", unsafe_allow_html=True)
+
+    # --------------------------------------------------------
+    # PREDICT BUTTON
+    # --------------------------------------------------------
+
+    submit_button = st.form_submit_button(
+        "🚀  Analyze Customer & Predict Churn",
+        use_container_width=True,
+    )
+
+
+# ============================================================
+# PREDICTION
+# ============================================================
+
 if submit_button:
+
     payload = {
         "gender": gender,
         "SeniorCitizen": senior,
@@ -86,31 +620,323 @@ if submit_button:
     }
 
     try:
-        with st.spinner("Analyzing customer risk profile..."):
-            response = requests.post(f"{API_URL}/predict", json=payload, timeout=10)
+
+        with st.spinner("🤖 AI is analyzing the customer profile..."):
+
+            response = requests.post(
+                f"{API_URL}/predict",
+                json=payload,
+                timeout=10,
+            )
+
+        # ----------------------------------------------------
+        # SUCCESS
+        # ----------------------------------------------------
 
         if response.status_code == 200:
+
             result = response.json()
+
             prob = result["churn_probability"] * 100
             risk = result["risk_level"]
+            prediction = result["churn_prediction"]
 
-            st.divider()
-            st.subheader("📊 Prediction Results")
+            # Determine risk styling
 
-            res_col1, res_col2 = st.columns(2)
+            risk_lower = str(risk).lower()
 
-            with res_col1:
-                if result["churn_prediction"] == 1:
-                    st.error("### Result: High Probability of Churn")
-                else:
-                    st.success("### Result: Low Probability of Churn")
+            if "high" in risk_lower:
 
-            with res_col2:
-                st.metric(label="Churn Probability", value=f"{prob:.1f}%")
-                st.caption(f"Risk Level: **{risk}**")
+                risk_class = "risk-high"
+                risk_icon = "🔴"
+                result_title = "High Churn Risk"
+
+            elif "medium" in risk_lower:
+
+                risk_class = "risk-medium"
+                risk_icon = "🟡"
+                result_title = "Moderate Churn Risk"
+
+            else:
+
+                risk_class = "risk-low"
+                risk_icon = "🟢"
+                result_title = "Low Churn Risk"
+
+            # ------------------------------------------------
+            # RESULT HEADER
+            # ------------------------------------------------
+
+            st.markdown(
+                """
+                <br>
+
+                <div class="result-card">
+
+                    <div class="result-label">
+                        AI PREDICTION RESULT
+                    </div>
+
+                </div>
+                """,
+                unsafe_allow_html=True,
+            )
+
+            result_col1, result_col2 = st.columns(
+                [1.3, 1],
+                gap="large",
+            )
+
+            # ------------------------------------------------
+            # LEFT — RESULT
+            # ------------------------------------------------
+
+            with result_col1:
+
+                st.markdown(
+                    f"""
+                    <div class="result-card">
+
+                        <div style="
+                            font-size:18px;
+                            color:#94a3b8;
+                        ">
+                            Prediction
+                        </div>
+
+                        <div style="
+                            font-size:32px;
+                            font-weight:800;
+                            margin-top:8px;
+                        ">
+                            {risk_icon} {result_title}
+                        </div>
+
+                        <div style="
+                            color:#64748b;
+                            margin-top:12px;
+                            font-size:14px;
+                        ">
+                            Based on the customer's demographics,
+                            services, contract and billing behavior.
+                        </div>
+
+                        <div style="margin-top:25px;">
+
+                            <div class="result-label">
+                                CHURN PROBABILITY
+                            </div>
+
+                            <div class="probability">
+                                {prob:.1f}%
+                            </div>
+
+                            <div class="risk-badge {risk_class}">
+                                {risk_icon} {risk} Risk
+                            </div>
+
+                        </div>
+
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+            # ------------------------------------------------
+            # RIGHT — VISUAL PROBABILITY
+            # ------------------------------------------------
+
+            with result_col2:
+
+                st.markdown(
+                    """
+                    <div class="result-card">
+
+                        <div class="result-label">
+                            RISK ANALYSIS
+                        </div>
+
+                        <div style="
+                            font-size:22px;
+                            font-weight:700;
+                            margin-top:8px;
+                        ">
+                            Customer Risk Score
+                        </div>
+
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+                # Native Streamlit progress bar
+
+                st.progress(
+                    min(max(prob / 100, 0.0), 1.0),
+                    text=f"Churn probability: {prob:.1f}%",
+                )
+
+                st.markdown(
+                    """
+                    <div style="
+                        display:flex;
+                        justify-content:space-between;
+                        margin-top:15px;
+                        color:#64748b;
+                        font-size:12px;
+                    ">
+                        <span>Low Risk</span>
+                        <span>Medium Risk</span>
+                        <span>High Risk</span>
+                    </div>
+                    """,
+                    unsafe_allow_html=True,
+                )
+
+                st.markdown("<br>", unsafe_allow_html=True)
+
+                # ------------------------------------------------
+                # QUICK METRICS
+                # ------------------------------------------------
+
+                m1, m2 = st.columns(2)
+
+                with m1:
+
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+
+                            <div class="metric-value">
+                                {tenure}
+                            </div>
+
+                            <div class="metric-label">
+                                MONTHS WITH COMPANY
+                            </div>
+
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+
+                with m2:
+
+                    st.markdown(
+                        f"""
+                        <div class="metric-card">
+
+                            <div class="metric-value">
+                                ${monthly:.2f}
+                            </div>
+
+                            <div class="metric-label">
+                                MONTHLY CHARGES
+                            </div>
+
+                        </div>
+                        """,
+                        unsafe_allow_html=True,
+                    )
+
+            # ------------------------------------------------
+            # INTERPRETATION
+            # ------------------------------------------------
+
+            st.markdown("<br>", unsafe_allow_html=True)
+
+            if prediction == 1:
+
+                st.warning(
+                    """
+                    ⚠️ **Customer Retention Recommendation**
+
+                    This customer shows elevated churn risk.
+                    Consider reviewing their contract, service usage,
+                    pricing and support experience.
+                    """
+                )
+
+            else:
+
+                st.success(
+                    """
+                    ✅ **Customer Retention Status**
+
+                    This customer currently shows a relatively low
+                    probability of churn based on the submitted profile.
+                    """
+                )
+
+        # ----------------------------------------------------
+        # API ERROR
+        # ----------------------------------------------------
 
         else:
-            st.error(f"API Error: {response.json().get('detail', 'Unknown error')}")
 
-    except Exception as e:
-        st.error(f"Could not connect to FastAPI server at {API_URL}. Exception: {e}")
+            try:
+                detail = response.json().get(
+                    "detail",
+                    "Unknown API error",
+                )
+            except Exception: # noqa: BLE001
+                detail = response.text
+
+            st.error(
+                f"⚠️ Prediction API Error: {detail}"
+            )
+
+    # --------------------------------------------------------
+    # CONNECTION ERROR
+    # --------------------------------------------------------
+
+    except requests.exceptions.ConnectionError:
+
+        st.error(
+            f"""
+            🔌 **Unable to connect to the prediction server.**
+
+            Make sure your FastAPI backend is running at:
+
+            `{API_URL}`
+            """
+        )
+
+    except requests.exceptions.Timeout:
+
+        st.error(
+            """
+            ⏱️ **Prediction request timed out.**
+
+            The backend took too long to respond.
+            Please check your FastAPI service.
+            """
+        )
+
+    except Exception as e:  # noqa: BLE001
+
+        st.error(
+            f"""
+            ❌ **Unexpected error**
+
+            `{e}`
+            """
+        )
+
+
+# ============================================================
+# FOOTER
+# ============================================================
+
+st.markdown(
+    """
+    <div class="footer">
+
+        ChurnAI • AI-Powered Customer Analytics
+        <br>
+        FastAPI + Machine Learning + Streamlit
+
+    </div>
+    """,
+    unsafe_allow_html=True,
+)

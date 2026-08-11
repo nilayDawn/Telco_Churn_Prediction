@@ -28,7 +28,7 @@ def load_artifacts():
         logger.info("Initializing prediction artifacts for FastAPI server...")
         predictor = ChurnPredictor(config)
         logger.info("FastAPI initialization complete.")
-    except Exception as e:
+    except Exception as e:   # noqa: BLE001
         logger.error(f"Failed to load artifacts on startup: {e!s}")
 
 
@@ -77,7 +77,7 @@ def predict_churn(payload: ChurnInputSchema):
             churn_prediction=pred, churn_probability=prob, risk_level=risk
         )
 
-    except Exception as e:
+    except Exception as e:   # noqa: BLE001
         logger.error(f"Inference error: {e!s}")
         raise HTTPException(
             status_code=500, detail=f"Inference processing failed: {e!s}"
