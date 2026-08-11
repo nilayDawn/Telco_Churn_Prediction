@@ -141,3 +141,13 @@
 2026-08-11 14:47:24,878 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
 2026-08-11 14:47:24,878 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
 2026-08-11 14:47:24,878 | INFO     | uvicorn.error:_serve:104 - Finished server process [118278]
+2026-08-11 14:50:29,298 | INFO     | root:validate_raw_schema:35 - Validating raw data schema...
+2026-08-11 14:50:29,298 | INFO     | root:validate_raw_schema:48 - Raw data schema validation passed successfully.
+2026-08-11 14:50:29,301 | INFO     | root:validate_raw_schema:35 - Validating raw data schema...
+2026-08-11 14:50:29,301 | ERROR    | root:validate_raw_schema:45 - Missing required columns: ['gender']
+2026-08-11 14:50:29,303 | INFO     | root:validate_raw_schema:35 - Validating raw data schema...
+2026-08-11 14:50:29,303 | ERROR    | root:validate_raw_schema:38 - Raw dataframe is empty.
+2026-08-11 14:50:29,305 | INFO     | root:fit_transform:15 - Starting feature engineering and data preprocessing...
+2026-08-11 14:50:29,317 | INFO     | root:fit_transform:72 - Preprocessing complete. Total features created: 9
+2026-08-11 14:50:29,324 | INFO     | httpx2:_send_single_request:1092 - HTTP Request: GET http://testserver/health "HTTP/1.1 503 Service Unavailable"
+2026-08-11 14:50:29,331 | INFO     | httpx2:_send_single_request:1092 - HTTP Request: POST http://testserver/predict "HTTP/1.1 503 Service Unavailable"
