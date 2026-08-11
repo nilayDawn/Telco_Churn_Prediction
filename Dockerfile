@@ -12,11 +12,11 @@ RUN apt-get update && apt-get install -y --no-install-recommends \
     curl \
     && rm -rf /var/lib/apt/lists/*
 
+# Copy dependency definition and install packages
+COPY requirements.txt .
+
 # Install uv for fast dependency resolution
 COPY --from=ghcr.io/astral-sh/uv:latest /uv /bin/uv
-
-# Copy package dependency configuration
-COPY pyproject.toml requirements.txt ./
 
 # Install project dependencies
 RUN uv pip install --system -r requirements.txt

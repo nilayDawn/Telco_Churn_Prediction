@@ -1,6 +1,6 @@
 import logging
 import sys
-from datetime import UTC, datetime
+from datetime import timezone, datetime
 from logging.handlers import TimedRotatingFileHandler
 from pathlib import Path
 
@@ -9,7 +9,7 @@ LOGS_DIR = Path(__file__).resolve().parent.parent / "Logs"
 LOGS_DIR.mkdir(exist_ok=True, parents=True)
 
 # Generate log filename based on current date (e.g., Logs/logs_2026-06-07.log)
-current_date_str = datetime.now(UTC).strftime("%Y-%m-%d")
+current_date_str = datetime.now(timezone.utc).strftime("%Y-%m-%d")
 LOG_FILE_PATH = LOGS_DIR / f"logs_{current_date_str}.log"
 
 

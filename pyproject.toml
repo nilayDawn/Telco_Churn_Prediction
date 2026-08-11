@@ -7,7 +7,7 @@ name = "churn-prediction"
 version = "0.1.0"
 description = "Customer Churn Prediction Modular ML System"
 readme = "README.md"
-requires-python = ">=3.10"
+requires-python = ">=3.12"
 dependencies = [
     "fastapi>=0.100.0",
     "joblib>=1.3.0",

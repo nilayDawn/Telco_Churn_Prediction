@@ -1,4 +1,5 @@
 import os
+
 import requests
 import streamlit as st
 
@@ -100,9 +101,9 @@ if submit_button:
 
             with res_col1:
                 if result["churn_prediction"] == 1:
-                    st.error(f"### Result: High Probability of Churn")
+                    st.error("### Result: High Probability of Churn")
                 else:
-                    st.success(f"### Result: Low Probability of Churn")
+                    st.success("### Result: Low Probability of Churn")
 
             with res_col2:
                 st.metric(label="Churn Probability", value=f"{prob:.1f}%")
