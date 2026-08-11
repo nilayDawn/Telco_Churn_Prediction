@@ -13,7 +13,7 @@ artifacts:
 
 mlflow:
   experiment_name: "Customer_Churn_Prediction"
-  tracking_uri: "mlruns"
+  tracking_uri: "sqlite:///mlflow.db"
 
 model:
   type: "lightgbm"
