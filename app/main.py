@@ -1,9 +1,10 @@
-from fastapi import FastAPI, HTTPException, status
 import pandas as pd
+import yaml
+from fastapi import FastAPI, HTTPException, status
+
 from app.schema import ChurnInputSchema, ChurnPredictionResponse
 from src.models.predict import ChurnPredictor
 from src.utils.logger import logger
-import yaml
 
 app = FastAPI(
     title="Customer Churn Prediction API",
@@ -28,7 +29,7 @@ def load_artifacts():
         predictor = ChurnPredictor(config)
         logger.info("FastAPI initialization complete.")
     except Exception as e:
-        logger.error(f"Failed to load artifacts on startup: {str(e)}")
+        logger.error(f"Failed to load artifacts on startup: {e!s}")
 
 
 @app.get("/health", status_code=status.HTTP_200_OK)
@@ -77,7 +78,7 @@ def predict_churn(payload: ChurnInputSchema):
         )
 
     except Exception as e:
-        logger.error(f"Inference error: {str(e)}")
+        logger.error(f"Inference error: {e!s}")
         raise HTTPException(
-            status_code=500, detail=f"Inference processing failed: {str(e)}"
+            status_code=500, detail=f"Inference processing failed: {e!s}"
         )

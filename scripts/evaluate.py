@@ -1,11 +1,12 @@
-from pathlib import Path
 import sys
+from pathlib import Path
 
 sys.path.append(str(Path(__file__).resolve().parents[1]))
 
 
-import yaml
 import pandas as pd
+import yaml
+
 from src.models.predict import ChurnPredictor
 from src.models.train import ModelTrainer
 from src.utils.logger import logger

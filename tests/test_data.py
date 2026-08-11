@@ -1,5 +1,6 @@
 import pandas as pd
 import pytest
+
 from src.data.validate_data import DataValidator
 
 
