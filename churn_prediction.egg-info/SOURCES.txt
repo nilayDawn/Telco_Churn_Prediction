@@ -1,5 +1,6 @@
 README.md
 pyproject.toml
+app/frontend.py
 app/main.py
 app/schema.py
 churn_prediction.egg-info/PKG-INFO
