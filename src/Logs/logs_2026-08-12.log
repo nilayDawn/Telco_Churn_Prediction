@@ -2022,3 +2022,10 @@
 2026-08-12 18:40:07,339 | INFO     | uvicorn.error:shutdown:67 - Waiting for application shutdown.
 2026-08-12 18:40:07,339 | INFO     | uvicorn.error:shutdown:76 - Application shutdown complete.
 2026-08-12 18:40:07,339 | INFO     | uvicorn.error:_serve:104 - Finished server process [40327]
+2026-08-12 18:42:52,960 | INFO     | uvicorn.error:_serve:94 - Started server process [46360]
+2026-08-12 18:42:52,960 | INFO     | uvicorn.error:startup:48 - Waiting for application startup.
+2026-08-12 18:42:52,962 | INFO     | root:load_artifacts:28 - Initializing prediction artifacts for FastAPI server...
+2026-08-12 18:42:52,962 | INFO     | root:__init__:20 - Loading preprocessor and LightGBM model artifacts...
+2026-08-12 18:42:52,962 | INFO     | root:load_preprocessor:148 - Loading preprocessor from artifacts/preprocessor.pkl
+2026-08-12 18:42:53,692 | INFO     | root:load_artifacts:30 - FastAPI initialization complete.
+2026-08-12 18:42:53,692 | INFO     | uvicorn.error:startup:62 - Application startup complete.

@@ -9,7 +9,7 @@
 
 An end-to-end, production-grade MLOps platform for real-time Telecommunications Customer Churn Prediction. Powered by an Optuna-tuned **LightGBM** classifier, a high-performance **FastAPI** inference backend, and a modern **Streamlit** dark-mode dashboard interface.
 
-🚀 **Live Interactive App**: [https://churn-prediction.streamlit.app](https://churn-prediction.streamlit.app)
+🚀 **Live Interactive App**: [https://churn-prediction-nil.streamlit.app](https://churn-prediction-nil.streamlit.app)
 
 ---
 
