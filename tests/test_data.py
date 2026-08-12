@@ -42,7 +42,8 @@ def test_validate_raw_schema_success(sample_valid_data):
 def test_validate_raw_schema_missing_column(sample_valid_data):
     invalid_df = sample_valid_data.drop(columns=["gender"])
     validator = DataValidator(config={})
-    with pytest.raises(ValueError, match="missing columns"):
+    # Updated match pattern to align with Great Expectations error exception
+    with pytest.raises(ValueError, match="Data validation checks failed!"):
         validator.validate_raw_schema(invalid_df)
 
 

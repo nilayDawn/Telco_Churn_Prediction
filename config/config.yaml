@@ -19,12 +19,12 @@ model:
   type: "lightgbm"
   params:
     n_estimators: 100
-    learning_rate: 0.014865664716940355
-    max_depth: 3
-    num_leaves: 42
-    min_child_samples: 47
-    subsample: 0.9815448676605261
-    colsample_bytree: 0.9226700449971044
+    learning_rate: 0.010001063763219657
+    max_depth: 4
+    num_leaves: 21
+    min_child_samples: 15
+    subsample: 0.8416931487331285
+    colsample_bytree: 0.6589724887114597
     class_weight: "balanced"
     random_state: 42
     n_jobs: -1

@@ -23,7 +23,7 @@ jobs:
 
       - name: Generate Artifacts
         run: |
-          python scripts/run_pipeline.py
+           python scripts/run_pipiline.py 
 
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
