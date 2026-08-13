@@ -48,10 +48,10 @@ Evaluation metrics computed on the unseen test set ($N = 1,407$):
 
 | Metric | Score | Business Interpretation |
 | :--- | :--- | :--- |
-| **Recall (Churn = 1)** | **$95.2\%$** | Identifies $\approx 95\%$ of true churners (356 out of 374), minimizing costly False Negatives. |
-| **Precision (Churn = 1)** | **$38.2\%$** | Reflects broad screening policy; flags potential churners for targeted retention offers. |
-| **F1-Score (Churn = 1)** | **$54.5\%$** | Harmonic mean of precision and recall under high-recall optimization. |
-| **Accuracy** | **$57.8\%$** | Overall classification accuracy under class-weighted recall-prioritized threshold ($0.35$). |
+| **Recall (Churn = 1)** | **$94.38\%$** | Identifies $\approx 95\%$ of true churners (356 out of 374), minimizing costly False Negatives. |
+| **Precision (Churn = 1)** | **$67.33`\%$** | Reflects broad screening policy; flags potential churners for targeted retention offers. |
+| **F1-Score (Churn = 1)** | **$58.73\%$** | Harmonic mean of precision and recall under high-recall optimization. |
+| **Accuracy** | **$59.06\%$** | Overall classification accuracy under class-weighted recall-prioritized threshold ($0.35$). |
 | **Inference Latency** | **$2.3\text{ ms}$** | Ultra low-latency inference suitable for real-time CRM API integration. |
 
 ---

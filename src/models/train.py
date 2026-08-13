@@ -1,10 +1,12 @@
 from pathlib import Path
 
+import matplotlib.pyplot as plt
 import joblib
 import lightgbm as lgb
 import mlflow
 import mlflow.lightgbm
 import pandas as pd
+import shap
 from sklearn.metrics import (
     accuracy_score,
     f1_score,
@@ -83,3 +85,17 @@ class ModelTrainer:
             # Log trained LightGBM model artifact
             mlflow.lightgbm.log_model(self.model, artifact_path="model")
             logger.info("MLflow logging completed.")
+    def log_shap_summary(model, X_train):
+        explainer = shap.TreeExplainer(model)
+        shap_values = explainer(X_train)
+
+        plt.figure(figsize=(10, 6))
+        shap.summary_plot(shap_values, X_train, show=False)
+        
+        plot_path = "shap_summary.png"
+        plt.tight_layout()
+        plt.savefig(plot_path, dpi=300)
+        plt.close()
+
+        # Log image artifact to MLflow
+        mlflow.log_artifact(plot_path, artifact_path="plots")

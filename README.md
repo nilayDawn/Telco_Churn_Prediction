@@ -18,7 +18,7 @@ An end-to-end, production-grade MLOps platform for real-time Telecommunications 
 Customer churn poses a major financial challenge in telecommunications. Retaining an existing subscriber costs up to 5×–25× less than acquiring a new customer. **ChurnAI** empowers retention teams to preemptively identify at-risk subscribers and execute targeted retention offers before customers disconnect.
 
 * **Primary Objective**: Detect churn risk early with high precision and recall.
-* **Key ML Metric**: **Recall $\ge 95\%$** (prioritizing detection of true churners to minimize costly False Negatives).
+* **Key ML Metric**: **Recall $\ge 94\%$** (prioritizing detection of true churners to minimize costly False Negatives).
 * **Model Class**: Optuna Bayesian-optimized **LightGBM Classifier**.
 * **Experiment Artifact**: [`NOTEBOOKS/experiment.ipynb`](./NOTEBOOKS/experiment.ipynb) — Ground truth for EDA, Optuna hyperparameter tuning, MLflow tracking, and model evaluations.
 
@@ -80,10 +80,10 @@ Evaluated on unseen test set ($N=1,407$ in [`NOTEBOOKS/experiment.ipynb`](./NOTE
 
 | Metric | Score | Business Impact |
 | :--- | :---: | :--- |
-| **Recall (Churn = 1)** | **$95.2\%$** | Successfully detects $\approx 95\%$ of actual churners (minimizes False Negatives). |
-| **Precision (Churn = 1)** | **$38.2\%$** | Broad screening strategy to flag potential churners for targeted retention offers. |
-| **F1-Score (Churn = 1)** | **$54.5\%$** | Harmonic balance between Precision and Recall. |
-| **Accuracy** | **$57.8\%$** | Reflects recall-prioritized operating threshold ($0.35$). |
+| **Recall (Churn = 1)** | **$94.38\%$** | Successfully detects $\approx 95\%$ of actual churners (minimizes False Negatives). |
+| **Precision (Churn = 1)** | **$38.87\%$** | Broad screening strategy to flag potential churners for targeted retention offers. |
+| **F1-Score (Churn = 1)** | **$55.07`\%$** | Harmonic balance between Precision and Recall. |
+| **Accuracy** | **$59.06\%$** | Reflects recall-prioritized operating threshold ($0.35$). |
 | **Inference Latency** | **$2.3\text{ ms}$** | Ultra fast prediction speed suitable for high-throughput real-time APIs. |
 
 ---

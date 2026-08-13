@@ -3,8 +3,17 @@ import textwrap
 
 import requests
 import streamlit as st
+import streamlit.components.v1 as components
+
+from src.models.explainability import ModelExplainer
 
 API_URL = os.getenv("API_URL", "http://localhost:8000")
+
+@st.cache_resource
+def load_explainer():
+    return ModelExplainer()
+
+explainer = load_explainer()
 
 st.set_page_config(
     page_title="ChurnAI | Customer Churn Predictor",
@@ -517,6 +526,34 @@ if submit_button:
                     "✅ **Customer Retention Status**\n\n"
                     "This customer currently shows a relatively low probability of churn based on the submitted profile."
                 )
+            st.divider()
+
+            # --- 🔍 EXPLAINABLE AI SECTION ---
+            st.header("🔍 Model Interpretability & Explainability (XAI)")
+            
+            tab1, tab2 = st.tabs(["⚡ SHAP Feature Attribution", "🧪 LIME Local Explanation"])
+
+            with tab1:
+                st.subheader("SHAP Waterfall Plot")
+                st.write("Shows how each customer feature pushes the risk prediction higher (red) or lower (blue) relative to the baseline.")
+                
+                # Render SHAP Matplotlib figure inside Streamlit
+                fig = explainer.get_shap_waterfall_plot(X_transformed)
+                st.pyplot(fig, clear_figure=True)
+
+            with tab2:
+                st.subheader("LIME Explanation")
+                st.write("Local Interpretable Model-agnostic Explanations (LIME) builds a local linear model to explain this individual decision.")
+                
+                # Load sample reference training dataset for LIME baseline
+                sample_train = pd.read_csv("data/processed/train.csv")
+                X_train_transformed, _ = preprocessor.transform(sample_train.head(100))
+                
+                lime_exp = explainer.get_lime_explanation(X_train_transformed, X_transformed)
+                
+                # Render HTML component for LIME
+                html_content = lime_exp.as_html()
+                components.html(html_content, height=500, scrolling=True)
 
         else:
             try:
